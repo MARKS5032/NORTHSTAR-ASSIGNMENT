@@ -4,10 +4,10 @@ const express = require('express');
 const cors = require('cors');
 
 const sessionMiddleware = require('./sessionMiddleware');
-const ordersRouter = require('./routes/orders');
-const threadsRouter = require('./routes/threads');
-const messagesRouter = require('./routes/messages');
-const escalationsRouter = require('./routes/escalations');
+const ordersRouter = require('./orders');
+const threadsRouter = require('./threads');
+const messagesRouter = require('./messages');
+const escalationsRouter = require('./escalations');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
