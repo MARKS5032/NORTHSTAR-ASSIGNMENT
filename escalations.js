@@ -1,6 +1,6 @@
 // routes/escalations.js
 const express = require('express');
-const threadRepo = require('../lib/threadRepository');
+const threadRepo = require('./threadRepository');
 
 const router = express.Router();
 
