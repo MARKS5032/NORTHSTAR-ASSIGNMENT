@@ -1,6 +1,6 @@
 // routes/orders.js
 const express = require('express');
-const { getOrderById, toCustomerView } = require('../lib/orderRepository');
+const { getOrderById, toCustomerView } = require('./orderRepository');
 
 const router = express.Router();
 
