@@ -4,7 +4,8 @@
   "description": "MVP support chatbot for Northstar Retail Co. - order status, returns, refunds",
   "main": "server.js",
   "scripts": {
-    "seed": "node db/seed.js",
+    "build": "node seed.js",
+    "seed": "node seed.js",
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
