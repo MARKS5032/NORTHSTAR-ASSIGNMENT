@@ -1,0 +1,17 @@
+{
+  "name": "northstar-support-chatbot",
+  "version": "1.0.0",
+  "description": "MVP support chatbot for Northstar Retail Co. - order status, returns, refunds",
+  "main": "server.js",
+  "scripts": {
+    "seed": "node db/seed.js",
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "uuid": "^9.0.1"
+  }
+}

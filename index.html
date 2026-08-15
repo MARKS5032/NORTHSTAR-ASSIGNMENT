@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Northstar Retail — Support Assistant (MVP)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div>
+      <div class="wordmark">Northstar<span>·</span>Support</div>
+      <div class="tagline">Order Status · Returns · Refunds — Ticket Deflection Prototype</div>
+    </div>
+    <div class="pod-tag">
+      Support Automation Pod · Week 1 MVP<br>
+      <b>Backend:</b> Node/Express · <b>DB:</b> SQLite (source of truth)
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <!-- THREAD SIDEBAR -->
+    <div class="threads-card">
+      <button id="newThreadBtn" class="new-thread-btn">+ New chat</button>
+      <div id="threadList" class="thread-list"></div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-card">
+      <div class="chat-head">
+        <div class="title" id="chatTitle">New conversation</div>
+        <div class="status-dot"><i></i> Live against SQLite orders table</div>
+      </div>
+
+      <div class="messages" id="messages"></div>
+
+      <div class="chips-row">
+        <div class="chip" data-intent="status">Track my order</div>
+        <div class="chip" data-intent="return">Start a return</div>
+        <div class="chip" data-intent="refund">Check my refund</div>
+        <div class="chip" data-intent="policy">Return policy</div>
+      </div>
+
+      <div class="input-row">
+        <input id="userInput" type="text" placeholder="e.g. NS1005 or &quot;where is my order&quot;" autocomplete="off">
+        <button id="sendBtn">Send</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="side">
+      <div class="manifest">
+        <h3>Decision Trail</h3>
+        <div id="trail">
+          <div class="trail-empty">No query yet in this thread.</div>
+        </div>
+      </div>
+
+      <div class="queue">
+        <h3>Escalation Queue (session)</h3>
+        <div id="queue"><div class="queue-empty">Nothing escalated yet.</div></div>
+      </div>
+
+      <div class="scope-note">
+        Order-specific questions (with an order ID) are answered from the orders database. General policy questions — returns, refunds, cancellations — are answered from the Northstar Knowledge Base. Ask about an order without an ID and the bot will ask for one rather than guess.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
