@@ -1,7 +1,7 @@
 // routes/messages.js
 const express = require('express');
-const threadRepo = require('../lib/threadRepository');
-const { route } = require('../lib/router');
+const threadRepo = require('./threadRepository');
+const { route } = require('./router');
 
 const router = express.Router({ mergeParams: true });
 
