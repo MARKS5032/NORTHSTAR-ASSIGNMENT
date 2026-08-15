@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 const cors = require('cors');
 
-const sessionMiddleware = require('./lib/sessionMiddleware');
+const sessionMiddleware = require('./sessionMiddleware');
 const ordersRouter = require('./routes/orders');
 const threadsRouter = require('./routes/threads');
 const messagesRouter = require('./routes/messages');
