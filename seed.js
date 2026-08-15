@@ -1,7 +1,5 @@
-// db/seed.js
-// Builds db/northstar.db from schema.sql and loads it with the exact rows
-// transcribed from Demo_Order_Database.pdf. This is the ONLY place order
-// data enters the system — the app never fabricates or edits these fields.
+// seed.js
+// Builds northstar.db from schema.sql in the root folder and populates initial orders.
 
 const path = require('path');
 const fs = require('fs');
@@ -9,6 +7,11 @@ const Database = require('better-sqlite3');
 
 const DB_PATH = path.join(__dirname, 'northstar.db');
 const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
+
+// Option to recreate a clean database if needed
+if (fs.existsSync(DB_PATH)) {
+  fs.unlinkSync(DB_PATH);
+}
 
 const db = new Database(DB_PATH);
 db.pragma('foreign_keys = ON');
@@ -33,8 +36,10 @@ const ORDERS = [
 ];
 
 const upsert = db.prepare(`
-  INSERT INTO orders (id, customer_name, product, order_date, expected_delivery, status, tracking_number, delivery_location, payment_status, return_eligible, notes)
-  VALUES (?,?,?,?,?,?,?,?,?,?,?)
+  INSERT INTO orders (
+    id, customer_name, product, order_date, expected_delivery, 
+    status, tracking_number, delivery_location, payment_status, return_eligible, notes
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   ON CONFLICT(id) DO UPDATE SET
     customer_name=excluded.customer_name,
     product=excluded.product,
@@ -48,53 +53,12 @@ const upsert = db.prepare(`
     notes=excluded.notes
 `);
 
-const insertAll = db.transaction((rows) => {
-  for (const row of rows) upsert.run(...row);
+const insertMany = db.transaction((orders) => {
+  for (const order of orders) {
+    upsert.run(...order);
+  }
 });
 
-insertAll(ORDERS);
+insertMany(ORDERS);
 
-// Northstar Knowledge Base — general policy content, not tied to any order.
-// This is what general returns/refunds/company-policy questions are
-// answered from, separately from the per-order database above.
-const KB_ARTICLES = [
-  ['kb-return-window', 'Return Policy',
-    'return policy,return window,how long to return,days to return,return items,can i return',
-    'Most items can be returned within 14 days of delivery, provided they\'re unused and in original packaging. Eligibility is checked per order — share your order ID and I can confirm whether that specific item qualifies.'],
-  ['kb-return-how', 'How to Return an Item',
-    'how do i return,how to return,return process,return label,drop off return',
-    'To return an eligible item: we email a prepaid or standard return label depending on the reason, you drop the package at any Northstar partner location, and the refund posts once we receive it. Share your order ID and I can start this for you.'],
-  ['kb-refund-timeline', 'Refund Timelines',
-    'refund policy,how long refund,when will i get my refund,refund timeline,how long does a refund take',
-    'Refunds are issued to your original payment method within 5–7 business days after we receive a returned item, or within 5–7 business days of a cancellation being processed. Share your order ID and I can check where a specific refund stands.'],
-  ['kb-exchange', 'Exchanges',
-    'exchange,swap item,different size,different color',
-    'We don\'t process direct exchanges — the fastest path is to return the original item for a refund and place a new order for the item you want. Share your order ID if you\'d like help starting a return.'],
-  ['kb-cancellation', 'Order Cancellation Policy',
-    'cancel order,cancellation policy,can i cancel,how to cancel',
-    'Orders can be cancelled while they\'re still in "Processing" status, before they\'ve shipped. Once an order ships, it can\'t be cancelled — a return after delivery is the next option. Share your order ID and I can check which stage it\'s at.'],
-  ['kb-damaged', 'Damaged or Defective Items',
-    'damaged,defective,broken,arrived broken,wrong item,item missing parts',
-    'Damaged, defective, or incorrect items are returned free of charge with an expedited prepaid label and no restocking fee. Share your order ID and describe the issue and I\'ll get that started.'],
-  ['kb-shipping', 'Shipping & Delivery',
-    'shipping policy,delivery time,how long does shipping take,shipping cost,delivery options',
-    'Standard delivery typically takes 5–7 days from the order date, depending on destination. Exact timing for a specific order — including tracking — is available if you share the order ID.'],
-  ['kb-payment', 'Payment Methods',
-    'payment methods,how can i pay,accepted payment,pay on delivery',
-    'Northstar accepts major cards and mobile payment on checkout; order-level payment status (paid, refunded) is tracked per order — share your order ID if you want that confirmed.'],
-  ['kb-contact', 'Contact a Human Agent',
-    'talk to a human,speak to agent,human support,real person,contact support',
-    'I can escalate this to a support agent right away — I\'ve logged it in the escalation queue and someone will follow up. If it\'s about a specific order, sharing the order ID helps them jump in faster.'],
-];
-
-const upsertKb = db.prepare(`
-  INSERT INTO kb_articles (id, topic, keywords, answer) VALUES (?,?,?,?)
-  ON CONFLICT(id) DO UPDATE SET topic=excluded.topic, keywords=excluded.keywords, answer=excluded.answer
-`);
-const insertAllKb = db.transaction((rows) => {
-  for (const row of rows) upsertKb.run(...row);
-});
-insertAllKb(KB_ARTICLES);
-
-console.log(`Seeded ${ORDERS.length} orders and ${KB_ARTICLES.length} knowledge base articles into ${DB_PATH}`);
-db.close();
+console.log('Database successfully seeded at northstar.db');
