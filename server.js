@@ -15,15 +15,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Serve static assets (CSS, JS, images) from the public folder
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files (CSS, JS, images) directly from the root directory
+app.use(express.static(__dirname));
 
-// Explicit route handler to serve index.html at the root URL
+// Serve index.html directly from the root directory
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Orders lookup doesn't need a session (useful for quick testing)
+// Orders lookup doesn't need a session
 app.use('/api/orders', ordersRouter);
 
 // Everything else is scoped to a browser session
