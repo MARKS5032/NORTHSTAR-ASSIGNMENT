@@ -31,3 +31,4 @@ app.get('/api/health', (req, res) => res.json({ ok: true }));
 app.listen(PORT, () => {
   console.log(`Northstar support chatbot running at http://localhost:${PORT}`);
 });
+module.exports= app;
